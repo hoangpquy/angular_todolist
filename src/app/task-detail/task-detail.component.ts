@@ -10,18 +10,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./task-detail.component.css']
 })
 export class TaskDetailComponent implements OnInit {
-  task : Task;
+  task: Task;
   constructor(
-    private taskService : TaskService,
-    private route : ActivatedRoute,
-    private router : Router 
+    private taskService: TaskService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.getTask();
   }
 
-  getTask() : void {
+  getTask(): void {
     const key = +this.route.snapshot.paramMap.get('key');
     this.taskService.getTask(key).subscribe(task => this.task = task);
   }
@@ -32,20 +32,19 @@ export class TaskDetailComponent implements OnInit {
 
   changeStatus(check: any): void {
     const key = +this.route.snapshot.paramMap.get('key');
-    let task_saved = JSON.parse(localStorage.getItem('list')); 
+    let task_saved = JSON.parse(localStorage.getItem('list'));
     task_saved[key].closedStatus = check;
     localStorage.setItem('list', JSON.stringify(task_saved));
     this.router.navigate(['/']);
   }
 
   delete(): void {
-    if(confirm("Are you sure?")) {
+    if (confirm('Are you sure?')) {
       const key = +this.route.snapshot.paramMap.get('key');
       let task_saved = JSON.parse(localStorage.getItem('list'));
       task_saved.splice(key, 1);
       localStorage.setItem('list', JSON.stringify(task_saved));
       this.router.navigate(['/']);
     }
-    
   }
 }

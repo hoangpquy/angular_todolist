@@ -3,6 +3,6 @@ export class Task {
   title: string;
   memo: string;
   closedDate: string;
-  closed_status: boolean;
+  closedStatus: boolean;
   time_out: any;
 }
