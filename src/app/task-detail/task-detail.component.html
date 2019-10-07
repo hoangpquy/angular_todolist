@@ -1,0 +1,22 @@
+<div class="container" style="margin-top: 15px">
+    <h2>{{ task.title | uppercase }} Detail</h2>
+    <div>
+        <p><strong>Title: </strong>{{ task.title }}</p>
+    </div>
+
+    <div>
+        <p><strong>Memories: </strong>{{ task.memo }}</p>
+    </div>
+
+    <div>
+        <p><strong>Closed Date: </strong>{{ task.closedDate }}</p>
+    </div>
+    
+    <div *ngIf="!task.time_out && !task.closedStatus">
+        <label>Closed: </label>
+        <input type="checkbox" [(ngModel)] = "isChecked" style="margin-left: 10px"> 
+    </div>
+    <button (click)="goBack()">go back</button>
+    <button (click)="changeStatus(isChecked? 'true' : 'false')">save</button>
+    <button (click)="delete()">delete</button>
+</div>
