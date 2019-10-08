@@ -10,7 +10,7 @@
         </thead>
 
         <tbody>
-            <tr *ngFor="let task of tasks; let i = index" class="tasks" routerLink="/task/{{i}}">
+            <tr *ngFor="let task of tasks; let i = index" class="tasks" (click)="open(content, task)">
                 <td>{{ task.title }}</td>
                 <td>{{ task.closedDate | date: 'yyyy/MM/dd'}}</td>
                 <td *ngIf="task.closedStatus; else doing">Completed</td>
@@ -20,3 +20,44 @@
         </tbody>
     </table>
 </div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Detail Item</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+            <table class="table table-borderless" id="popup">
+              <tbody>
+                <tr>
+                  <th scope="row">Title</th>
+                  <td class="title">{{selectedTask.title}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Memories</th>
+                  <td class="memories">{{selectedTask.memo}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Close Date</th>
+                  <td class="closed_date">{{selectedTask.closedDate}}</td> 
+                </tr>
+                <tr *ngIf = "!selectedTask.closedStatus && !selectedTask.time_out">
+                    <th scope="row">Close Status</th>
+                    <td><input type='checkbox' aria-label='Checkbox for following text input' id='check_closed' ></td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="changeStatus()">Save</button>
+      <button type="button" class="btn btn-danger" (click)="delete()">Delete</button>
+      <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>

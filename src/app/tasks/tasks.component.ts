@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Task } from '../task';
 import { TaskService } from '../task.service';
 import { DatePipe } from '@angular/common';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-tasks',
@@ -12,9 +15,15 @@ import { DatePipe } from '@angular/common';
 export class TasksComponent implements OnInit {
   tasks: Task[] ;
   now = new Date();
+  selectedTask: Task;
+  closeResult: string;
   constructor(
-    private taskService: TaskService
+    private taskService: TaskService,
+    private modalService: NgbModal,
+    private route : ActivatedRoute,
+    private router : Router 
   ) {
+    // this.sortedTask = this.tasks.slice();
   }
 
   ngOnInit() {
@@ -30,6 +39,47 @@ export class TasksComponent implements OnInit {
         else task.time_out = false;
         }
       });
+  }
+// Code them
+  open(content, task: Task) {
+    this.selectedTask = task;
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    } 
+  }
+
+
+  changeStatus(): void {
+    let a = document.getElementById("check_closed");
+    if(a){ 
+    let task_saved = JSON.parse(localStorage.getItem('list')); 
+    const key = task_saved.findIndex( task_saved => task_saved.title === this.selectedTask.title);
+    task_saved[key].closedStatus = true;
+    localStorage.setItem('list', JSON.stringify(task_saved));
+    window.location.href="/tasks";
+    }
+  }
+
+  delete(): void {
+    if(confirm("Bạn có chắc chắn muốn xóa không?")) {
+      let task_saved = JSON.parse(localStorage.getItem('list'));
+      const key = task_saved.findIndex( task_saved => task_saved.title === this.selectedTask.title);
+      task_saved.splice(key, 1);
+      localStorage.setItem('list', JSON.stringify(task_saved));
+      window.location.href="/tasks";
+    }
   }
 
   sortTable(n) {

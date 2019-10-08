@@ -68,7 +68,7 @@ export class InputFormComponent implements OnInit {
   }
   validDate() {
     if (this.todoListForm && moment(this.todoListForm.value.closedDate).isAfter(new Date())) {
-      return true;
+       return true;
     }
     return false;
   }

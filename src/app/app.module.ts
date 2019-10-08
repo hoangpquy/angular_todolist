@@ -9,6 +9,7 @@ import { from } from 'rxjs';
 import { TasksComponent } from './tasks/tasks.component';
 import { TaskDetailComponent } from './task-detail/task-detail.component';
 import {MatSortModule} from '@angular/material/sort';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -25,6 +26,7 @@ import {MatSortModule} from '@angular/material/sort';
     ReactiveFormsModule,
     FormsModule,
     MatSortModule,
+    NgbModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
