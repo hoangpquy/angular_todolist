@@ -18,13 +18,14 @@ export class TasksComponent implements OnInit {
   selectedTask: Task;
   closeResult: string;
   modalReference: any;
+  isChecked = false;
+
   constructor(
     private taskService: TaskService,
     private modalService: NgbModal,
     private route : ActivatedRoute,
     private router : Router 
   ) {
-    // this.sortedTask = this.tasks.slice();
   }
 
   ngOnInit() {
@@ -41,7 +42,6 @@ export class TasksComponent implements OnInit {
         }
       });
   }
-// Code them
   open(content, task: Task) {
     this.selectedTask = task;
     this.modalReference = this.modalService.open(content);
@@ -64,24 +64,19 @@ export class TasksComponent implements OnInit {
 
 
   changeStatus(): void {
-    let isCheck = document.getElementById("check_closed") as HTMLInputElement;
-    if(isCheck != null && isCheck.checked){
-    let task_saved = JSON.parse(localStorage.getItem('list'));
-    const key = task_saved.findIndex( task_saved => task_saved.id === this.selectedTask.id);
-    task_saved[key].closedStatus = true;
-    localStorage.setItem('list', JSON.stringify(task_saved));
-    window.location.href="/tasks";
+    if(this.isChecked){
+    const task = this.tasks.find( task_saved => task_saved.id === this.selectedTask.id);
+    task.closedStatus = true;
+    localStorage.setItem('list', JSON.stringify(this.tasks));
     }
     this.modalReference.close();
   }
 
   delete(): void {
     if(confirm("Bạn có chắc chắn muốn xóa không?")) {
-      let task_saved = JSON.parse(localStorage.getItem('list'));
-      const key = task_saved.findIndex( task_saved => ( task_saved.id === this.selectedTask.id));
-      task_saved.splice(key, 1);
-      localStorage.setItem('list', JSON.stringify(task_saved));
-      window.location.href="/tasks"; 
+      this.tasks = this.tasks.filter(item => item.id !== this.selectedTask.id);
+      localStorage.setItem('list', JSON.stringify(this.tasks));
+      this.modalReference.close();
     }
     
   }
