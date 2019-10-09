@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 })
 export class InputFormComponent implements OnInit {
 
+  
   todoListForm: FormGroup;
   listData = JSON.parse(localStorage.getItem('list'));
   model = new Model('', '', '', false);
@@ -32,6 +33,9 @@ export class InputFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (localStorage.getItem("list") === null) {
+      localStorage.setItem("list", JSON.stringify([]));
+    }
   }
 
   onSubmit() {
@@ -49,6 +53,15 @@ export class InputFormComponent implements OnInit {
       }
     });
     if (this.checkError() && this.validDate()) {
+      let id: number;
+      this.listData = JSON.parse(localStorage.getItem('list'));
+      if(this.listData.length !=0){
+         id = this.listData[this.listData.length - 1].id + 1;
+      }
+      else{
+        id = 0
+      }
+      this.todoListForm.value.id = id;
       this.listData.push(this.todoListForm.value);
       localStorage.setItem('list', JSON.stringify(this.listData));
       console.log(this.todoListForm);

@@ -17,6 +17,7 @@ export class TasksComponent implements OnInit {
   now = new Date();
   selectedTask: Task;
   closeResult: string;
+  modalReference: any;
   constructor(
     private taskService: TaskService,
     private modalService: NgbModal,
@@ -43,7 +44,8 @@ export class TasksComponent implements OnInit {
 // Code them
   open(content, task: Task) {
     this.selectedTask = task;
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    this.modalReference = this.modalService.open(content);
+    this.modalReference.result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -62,24 +64,26 @@ export class TasksComponent implements OnInit {
 
 
   changeStatus(): void {
-    let a = document.getElementById("check_closed");
-    if(a){ 
-    let task_saved = JSON.parse(localStorage.getItem('list')); 
-    const key = task_saved.findIndex( task_saved => task_saved.title === this.selectedTask.title);
+    let isCheck = document.getElementById("check_closed") as HTMLInputElement;
+    if(isCheck != null && isCheck.checked){
+    let task_saved = JSON.parse(localStorage.getItem('list'));
+    const key = task_saved.findIndex( task_saved => task_saved.id === this.selectedTask.id);
     task_saved[key].closedStatus = true;
     localStorage.setItem('list', JSON.stringify(task_saved));
     window.location.href="/tasks";
     }
+    this.modalReference.close();
   }
 
   delete(): void {
     if(confirm("Bạn có chắc chắn muốn xóa không?")) {
       let task_saved = JSON.parse(localStorage.getItem('list'));
-      const key = task_saved.findIndex( task_saved => task_saved.title === this.selectedTask.title);
+      const key = task_saved.findIndex( task_saved => ( task_saved.id === this.selectedTask.id));
       task_saved.splice(key, 1);
       localStorage.setItem('list', JSON.stringify(task_saved));
-      window.location.href="/tasks";
+      window.location.href="/tasks"; 
     }
+    
   }
 
   sortTable(n) {
