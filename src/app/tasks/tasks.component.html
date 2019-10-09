@@ -48,7 +48,7 @@
                 </tr>
                 <tr *ngIf = "!selectedTask.closedStatus && !selectedTask.time_out">
                     <th scope="row">Close Status</th>
-                    <td><input type='checkbox' aria-label='Checkbox for following text input' id='check_closed' ></td>
+                    <td><input type='checkbox' [checked]="isChecked" (change)="isChecked =! isChecked"></td>
                 </tr>
               </tbody>
             </table>
